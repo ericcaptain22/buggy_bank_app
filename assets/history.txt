@@ -1,0 +1,75 @@
+user1: Deposit 99.00. New Balance: 10100.00
+user1: Withdraw 99.00. New Balance: 10001.00
+user1: Transfer 1.00 to user2. New Balance: 10000.00
+user1: Loan 1.00. New Balance: 10001.00
+user1: Deposit 1.00. New Balance: 10002.00
+user1: Deposit 98.00. New Balance: 10100.00
+user1: Withdraw 100.00. New Balance: 10000.00
+user1: Transfer 1.00 to user2. New Balance: 9999.00
+user1: Loan 1.00. New Balance: 10000.00
+user1: Deposit 100.00. New Balance: 10100.00
+user2: Deposit 1.00. New Balance: 1553.00
+user1: Deposit 1.00. New Balance: 10101.00
+user1: Withdraw 1.00. New Balance: 10100.00
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+user1: Transfer 3.00 to user2. New Balance: 10092.00
+user1: Loan 1.00. New Balance: 10093.00
+Deposit successful.
+Deposit successful.
+Withdraw successful.
+Withdraw successful.
+user1: Loan 1.00. New Balance: 10092.00
+Deposit successful.
+Withdraw successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Bug 0 fixed: Bug in deposit function
+Deposit successful.
+Bug 0 fixed: Bug in deposit function
+Deposit successful.
+Bug 0 fixed: Bug in deposit function
+Deposit successful.
+Bug 0 fixed: Bug in deposit function
+Deposit successful.
+Bug 0 fixed: Bug in deposit function
+Deposit successful.
+Bug 0 fixed: Bug in deposit function
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Bug 0 fixed: Bug in deposit function
+Deposit successful.
+Bug 0 fixed: Bug in deposit function
+Deposit successful.
+Withdraw successful.
+Bug 1 fixed: Bug in withdraw function
+Deposit successful.
+Bug 0 fixed: Bug in deposit function
+Deposit successful.
+Bug 0 fixed: Bug in deposit function
+Deposit successful.
+Bug 0 fixed: Bug in deposit function
+Deposit successful.
+Bug 0 fixed: Deposit function bug: Does not update balance.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Withdraw successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.
+Deposit successful.

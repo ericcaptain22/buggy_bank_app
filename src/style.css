@@ -1,0 +1,166 @@
+/* General Styling */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f4f7fc;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Window Styling (no overflow or box-sizing) */
+window {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+#header_bar {
+    background-color: grey; /* Example background color */
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+
+/* User Page Styling */
+#user_page {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Labels */
+label {
+    font-size: 14px;
+    color: #333333;
+    margin-bottom: 5px;
+}
+
+/* Entry Fields */
+entry {
+    color: #000000; /* Black text */
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+/* Entry Fields Focus */
+entry:focus {
+    border-color: #4CAF50;
+    background-color: #ffffff;
+    outline: none;
+}
+
+/* Buttons */
+button {
+   background-color: #4CAF50; 
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+/* Buttons on Hover */
+button:hover {
+    background-color: #45a049;
+}
+
+/* Buttons Active State */
+button:active {
+    background-color: #3e8e41;
+}
+
+/* Button Disabled State */
+button:disabled {
+    background-color: #b0b0b0;
+   /* cursor: not-allowed; */
+}
+
+/* Section Containers */
+.box-container {
+    margin-bottom: 20px;
+}
+
+/* Hint Label */
+#hint_label {
+    font-size: 12px;
+    color: #888888;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* Title Styling */
+#user_page h1 {
+    font-size: 24px;
+    color: #333333;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Card Styling for Inputs and Buttons */
+.entry-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Add Padding to the Main Pages */
+#login_page, #create_account_page, #user_page {
+    padding: 20px;
+}
+.dialog {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(158, 65, 65, 0.2);
+    padding: 10px;
+    font-size: 22px;
+    color: #ffffff;
+    font-weight: bolder;
+}
+
+/* Styling the content area */
+dialog content-area {
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+/* Styling the scrolled window */
+
+
+/* Styling the text view for hints */
+textview {
+    color: #ffffff;
+    font-weight: bolder;
+    font-family: "Comic-Sans", sans-serif;
+    font-size: 18px;
+    background-color: #ffffff;
+    border: none;
+}
+
+
+
+/* Close button styling */
+dialog button {
+    background-color: #45a049;
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    
+}
+
+dialog button:hover {
+    background-color:  #3e8e41;
+
+}
