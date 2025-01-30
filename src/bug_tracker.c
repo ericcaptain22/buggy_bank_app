@@ -3,11 +3,13 @@
 // Global array of bugs
 Bug bugs[TOTAL_BUGS];
 extern int current_user_index; // Tracks the logged-in user index
-
+const char *login_function_code = "if (strcmp(users[i].username, username) == 0 && strcmp(users[i].password, password) == 0)";
 const char *deposit_function_code = "users[current_user_index].balance += amount";
 const char *withdraw_function_code = "if (amount <= 0 || amount > users[current_user_index].balance)";
 const char *transfer_function_code = "for (int i = 0; i < user_count; i++) { if (strcmp(users[i].username, recipient_username) == 0)";
 const char *loan_request_function_code = "if (loan_amount > 0)";
+const char *view_transaction_code = "FILE *file = fopen(\"assets/history.txt\", \"r\")";
+const char *change_password_code = "strcpy(users[i].password, new_password); save_users(\"assets/users.txt\");";
 
 
 #define ADMIN_USERNAME "admin"
@@ -52,6 +54,13 @@ const char *get_next_hint(int bug_id) {
     return "No more hints available."; // Default fallback
 }
 
+// Callback function for asynchronously displaying the hint
+static gboolean show_hint_callback(gpointer message) {
+    show_hint((char *)message, NULL);
+    g_free(message);
+    return G_SOURCE_REMOVE;  // Remove callback after execution
+}
+
 bool check_bug_fixed(int bug_id, GtkWidget *parent_window) {
     if (bug_id < 0 || bug_id >= TOTAL_BUGS) {
         return false;
@@ -71,49 +80,31 @@ bool check_bug_fixed(int bug_id, GtkWidget *parent_window) {
         return true;
     }
 
-    // Validate the current bug
     bool is_fixed = false;
 
-    if (bug_id == 0) {  // Deposit function bug
-        // ✅ The bug is fixed ONLY if "users[current_user_index].balance += amount;" is in the function
-        printf("DEBUG: Extracted Deposit Code: %s\n", deposit_function_code); // Debugging
-        if (
-            strstr(deposit_function_code, "users[current_user_index].balance += amount") != NULL &&
-            !strstr(deposit_function_code, "//users[current_user_index].balance += amount;")  // Ensure it's uncommented
-        ) {
-            is_fixed = true;
-        }
-    }
-
-    if (bug_id == 1) {  // Withdraw function bug
-        // ✅ The bug is fixed ONLY if the correct condition is present
-        printf("DEBUG: Extracted Withdraw Code: %s\n", withdraw_function_code);
-        if (
-            strstr(withdraw_function_code, "if (amount <= 0 || amount > users[current_user_index].balance)") != NULL &&
-            !strstr(withdraw_function_code, "if (amount < 0)")  // Ensure old bug is removed
-        ) {
-            is_fixed = true;
-        }
-    }
-
-    if (bug_id == 2) {  // Transfer function bug
-    printf("DEBUG: Extracted Transfer Code: %s\n", transfer_function_code);
-    if (
-        strstr(transfer_function_code, "if (recipient_index == -1)") != NULL && 
-        !strstr(transfer_function_code, "if (recipient_index < 0)")
-    ) {
+    if (bug_id == 0 && strstr(login_function_code, "&& strcmp(users[i].password, password) == 0")) {
         is_fixed = true;
     }
-}
 
-if (bug_id == 3) {  // Loan request function bug
-    if (
-        strstr(loan_request_function_code, "if (loan_amount <= 0)") != NULL && 
-        !strstr(loan_request_function_code, "if (loan_amount < 0)")
-    ) {
+    if (bug_id == 1 && strstr(withdraw_function_code, "if (amount <= 0 || amount > users[current_user_index].balance)")) {
         is_fixed = true;
     }
-}
+
+    if (bug_id == 2 && strstr(transfer_function_code, "for (int i = 0; i < user_count; i++)")) {
+        is_fixed = true;
+    }
+
+    if (bug_id == 3 && strstr(loan_request_function_code, "if (loan_amount > 0)")) {
+        is_fixed = true;
+    }
+
+    if (bug_id == 4 && strstr(view_transaction_code, "FILE *file = fopen(\"assets/history.txt\", \"r\")")) {
+        is_fixed = true;
+    }
+
+    if (bug_id == 5 && strstr(change_password_code, "save_users(\"assets/users.txt\");")) {
+        is_fixed = true;
+    }
 
     char message[256];
 
@@ -138,12 +129,4 @@ if (bug_id == 3) {  // Loan request function bug
         return false;
     }
 }
-
-// Callback function for asynchronously displaying the hint
-static gboolean show_hint_callback(gpointer message) {
-    show_hint((char *)message, NULL);
-    g_free(message);
-    return G_SOURCE_REMOVE;  // Remove callback after execution
-}
-
 

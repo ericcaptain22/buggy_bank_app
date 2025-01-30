@@ -11,143 +11,15 @@ user1: Deposit 100.00. New Balance: 10100.00
 user2: Deposit 1.00. New Balance: 1553.00
 user1: Deposit 1.00. New Balance: 10101.00
 user1: Withdraw 1.00. New Balance: 10100.00
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
 user1: Transfer 3.00 to user2. New Balance: 10092.00
 user1: Loan 1.00. New Balance: 10093.00
-Deposit successful.
-Deposit successful.
-Withdraw successful.
-Withdraw successful.
 user1: Loan 1.00. New Balance: 10092.00
 Deposit successful.
-Withdraw successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Bug 0 fixed: Bug in deposit function
-Deposit successful.
-Bug 0 fixed: Bug in deposit function
-Deposit successful.
-Bug 0 fixed: Bug in deposit function
-Deposit successful.
-Bug 0 fixed: Bug in deposit function
-Deposit successful.
-Bug 0 fixed: Bug in deposit function
-Deposit successful.
-Bug 0 fixed: Bug in deposit function
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Bug 0 fixed: Bug in deposit function
-Deposit successful.
-Bug 0 fixed: Bug in deposit function
-Deposit successful.
-Withdraw successful.
-Bug 1 fixed: Bug in withdraw function
-Deposit successful.
-Bug 0 fixed: Bug in deposit function
-Deposit successful.
-Bug 0 fixed: Bug in deposit function
-Deposit successful.
-Bug 0 fixed: Bug in deposit function
-Deposit successful.
-Bug 0 fixed: Deposit function bug: Does not update balance.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Deposit successful.
-Withdraw successful.
-Transfer successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Withdraw successful.
-Transfer successful.
-Deposit successful.
-Withdraw successful.
-Withdraw successful.
-Withdraw successful.
-Withdraw successful.
-Loan requested successfully.
-Deposit successful.
-Withdraw successful.
-Loan requested successfully.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Withdraw successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
-Deposit successful.
+user2: Withdraw 100.00. New Balance: 5474.00
+user2: Loan 2.00. New Balance: 5476.00
+user2: Transfer 2.00 to user1. New Balance: 5474.00
+user2: Deposit 12.00. New Balance: 5474.00
+user2: Deposit 6.00. New Balance: 5474.00
+user2: Deposit 100.00. New Balance: 5574.00
+user2: Deposit 6.00. New Balance: 5580.00
+user2: Deposit 100.00. New Balance: 5726.00

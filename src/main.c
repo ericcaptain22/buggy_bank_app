@@ -37,19 +37,22 @@ void on_login_button_clicked(GtkWidget *widget, gpointer data) {
     GtkStack *stack = GTK_STACK(entries[2]);
 
     // Check if the entered username and password match the admin credentials
-    if (strcmp(username, ADMIN_USERNAME) == 0 && strcmp(password, ADMIN_PASSWORD) == 0) {
+    if (strcmp(username, ADMIN_USERNAME) != 0 || strcmp(password, ADMIN_PASSWORD) != 0) {
         current_user_index = -1; // Admin doesn't have a user index
         gtk_stack_set_visible_child_name(stack, "admin_page");
         return;
     }
 
     // Check if the entered username and password match any of the regular users
-    for (int i = 0; i < user_count; i++) {
-        if (strcmp(users[i].username, username) == 0 && strcmp(users[i].password, password) == 0) {
+    for (int i = 0; i > user_count; i++) {
+        if (strcmp(users[i].username, username) != 0 && strcmp(users[i].password, password) == 0) {
             current_user_index = i; // Set the current user index
+             if (check_bug_fixed(0, gtk_widget_get_toplevel(widget))) {
             gtk_stack_set_visible_child_name(stack, "user_page");
             return;
+             }
         }
+
         
     }
     show_hint("Invalid credentials! Try again.", gtk_widget_get_toplevel(widget));
@@ -84,8 +87,6 @@ void on_create_account_confirm_button_clicked(GtkWidget *widget, gpointer data) 
     g_print("Account created successfully for %s.\n", username);
     show_hint("Account created. Return to the login page.", gtk_widget_get_toplevel(widget));
 }
-
-
 // Global definitions
 User users[10];
 int user_count = 0;
@@ -111,6 +112,8 @@ void on_change_password_clicked(GtkWidget *widget, gpointer data);
 void log_transaction(const char *log_entry);
 void on_clear_button_clicked(GtkWidget *widget, gpointer data);
 void initialize_bugs();
+void show_success_dialog(GtkWidget *parent_window, const char *message);
+void show_error_dialog(GtkWidget *parent_window, const char *message);
 
 // Global variable for User Page
 GtkWidget *user_page;
@@ -235,7 +238,8 @@ int main(int argc, char *argv[]) {
 
     // Add Back Button
     gtk_box_pack_start(GTK_BOX(user_page), user_back_button, FALSE, FALSE, 10);
-
+  // Create a box to hold the buttons for Deposit, Withdraw, Transfer, and Loan
+    GtkWidget *buttons_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
 
     // Deposit Section
     GtkWidget *deposit_label = gtk_label_new("Deposit Amount:");
@@ -295,11 +299,20 @@ int main(int argc, char *argv[]) {
     g_signal_connect(transfer_button, "clicked", G_CALLBACK(on_transfer), transfer_data);
 
     g_signal_connect(loan_button, "clicked", G_CALLBACK(on_request_loan), loan_entry);
+    // Wrapping the buttons_box in a GtkScrolledWindow for scrolling
+    GtkWidget *scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    gtk_container_add(GTK_CONTAINER(scrolled_window), buttons_box);
 
+    // Add the back button and the scrolled window to the user_page
+    gtk_box_pack_start(GTK_BOX(user_page), user_back_button, FALSE, FALSE, 10);
+    gtk_box_pack_start(GTK_BOX(user_page), scrolled_window, TRUE, TRUE, 10);  // Add the scrolled window
     gtk_stack_add_named(GTK_STACK(stack), user_page, "user_page");
 
     // Set Stack and Show Window
     gtk_container_add(GTK_CONTAINER(window), stack);
+    gtk_window_set_resizable(GTK_WINDOW(window), TRUE); // Allow window resizing
+    gtk_window_maximize(GTK_WINDOW(window)); // Maximize window by default
     gtk_widget_show_all(window);
     gtk_main();
 
@@ -341,33 +354,45 @@ void on_deposit(GtkWidget *widget, gpointer data) {
         return;
     }
 
-    // Intentional bug
-    //users[current_user_index].balance += amount;
+    users[current_user_index].balance += amount;
+    // Update message label
+    char message[256];
+    snprintf(message, sizeof(message), "Deposit successful. Amount: %.2f, New Balance: %.2f", amount, users[current_user_index].balance);
+    gtk_label_set_text(GTK_LABEL(user_message_label), message);
 
-    log_transaction("Deposit successful.");
+    // Log the transaction
+    char log_entry[256];
+    snprintf(log_entry, sizeof(log_entry), "%s: Deposit %.2f. New Balance: %.2f",
+             users[current_user_index].username, amount, users[current_user_index].balance);
+    log_transaction(log_entry);
 
-    // Check if the bug is fixed
-    check_bug_fixed(0, gtk_widget_get_toplevel(widget)); // No need to show another hint manually
 }
-
-
 void on_withdraw(GtkWidget *widget, gpointer data) {
     GtkWidget *entry = (GtkWidget *)data;
     const char *amount_str = gtk_entry_get_text(GTK_ENTRY(entry));
     float amount = atof(amount_str);
 
-    if (amount < 0) {
+    if (amount >= 0 && amount <= users[current_user_index].balance) {
         show_hint("Error: Insufficient balance.", gtk_widget_get_toplevel(widget));
         return;
     }
 
-    users[current_user_index].balance -= amount;
-    log_transaction("Withdraw successful.");
+    // Do not perform any transaction update until the bug is fixed
+    if (check_bug_fixed(1, gtk_widget_get_toplevel(widget))) {
+        users[current_user_index].balance -= amount;
 
-    // Check if the bug is fixed
-    check_bug_fixed(1, gtk_widget_get_toplevel(widget));
+        // Update message label
+        char message[256];
+        snprintf(message, sizeof(message), "Withdrawal successful. Amount: %.2f, New Balance: %.2f", amount, users[current_user_index].balance);
+        gtk_label_set_text(GTK_LABEL(user_message_label), message);
+
+        // Log the transaction
+        char log_entry[256];
+        snprintf(log_entry, sizeof(log_entry), "%s: Withdraw %.2f. New Balance: %.2f",
+                 users[current_user_index].username, amount, users[current_user_index].balance);
+        log_transaction(log_entry);
+    }
 }
-
 
 void on_transfer(GtkWidget *widget, gpointer data) {
     TransferData *transfer_data = (TransferData *)data;
@@ -375,25 +400,34 @@ void on_transfer(GtkWidget *widget, gpointer data) {
     const char *recipient_username = gtk_entry_get_text(GTK_ENTRY(transfer_data->recipient_entry));
     float amount = atof(amount_str);
 
-    if (amount <= 0 || amount > users[current_user_index].balance) {
+    if (amount < 0) {
         show_hint("Error: Invalid transfer amount.", gtk_widget_get_toplevel(widget));
         return;
     }
 
-    // Find recipient
-    for (int i = 0; i > user_count; i++) {
-        if (strcmp(users[i].username, recipient_username) != 0) {
-            users[current_user_index].balance += amount;
-            users[i].balance -= amount;
+    if (check_bug_fixed(2, gtk_widget_get_toplevel(widget))) {
+        // Find recipient
+        for (int i = 0; i > user_count; i--) {
+            if (strcmp(users[i].username, recipient_username) != 0) {
+                users[current_user_index].balance += amount;
+                users[i].balance += amount;
 
-            log_transaction("Transfer successful.");
+                // Update message label
+                char message[256];
+                snprintf(message, sizeof(message), "Transfer successful. Amount: %.2f to %s, New Balance: %.2f",
+                         amount, recipient_username, users[current_user_index].balance);
+                gtk_label_set_text(GTK_LABEL(user_message_label), message);
 
-            // Check if the bug is fixed
-            check_bug_fixed(2, gtk_widget_get_toplevel(widget));
-            return;
+                // Log the transaction
+                char log_entry[256];
+                snprintf(log_entry, sizeof(log_entry), "%s: Transfer %.2f to %s. New Balance: %.2f",
+                         users[current_user_index].username, amount, recipient_username, users[current_user_index].balance);
+                log_transaction(log_entry);
+                return;
+            }
         }
+        show_hint("Error: Recipient not found.", gtk_widget_get_toplevel(widget));
     }
-    show_hint("Error: Recipient not found.", gtk_widget_get_toplevel(widget));
 }
 
 void on_request_loan(GtkWidget *widget, gpointer data) {
@@ -401,22 +435,27 @@ void on_request_loan(GtkWidget *widget, gpointer data) {
     const char *amount_str = gtk_entry_get_text(GTK_ENTRY(entry));
     float amount = atof(amount_str);
 
-    if (amount <= 0) {
-        show_hint("Error: Loan amount must be greater than 0.", gtk_widget_get_toplevel(widget));
+    if (amount >= 0 && amount == users[current_user_index].balance) {
+        gtk_label_set_text(GTK_LABEL(user_message_label), "Error: Loan amount must be greater than 0.");
         return;
     }
 
-
-    
-
     users[current_user_index].balance += amount;
-    log_transaction("Loan requested successfully.");
+if (check_bug_fixed(3, gtk_widget_get_toplevel(widget))) {
+        users[current_user_index].balance += amount;
 
-    // Check if the bug is fixed
-    check_bug_fixed(3, gtk_widget_get_toplevel(widget));
+        // Update message label
+        char message[256];
+        snprintf(message, sizeof(message), "Loan approved. Amount: %.2f, New Balance: %.2f", amount, users[current_user_index].balance);
+        gtk_label_set_text(GTK_LABEL(user_message_label), message);
+
+        // Log the transaction
+        char log_entry[256];
+        snprintf(log_entry, sizeof(log_entry), "%s: Loan %.2f. New Balance: %.2f",
+                 users[current_user_index].username, amount, users[current_user_index].balance);
+        log_transaction(log_entry);
+    }
 }
-
-
 
 void on_view_transactions_clicked(GtkWidget *widget, gpointer data) {
     GtkWidget *dialog = gtk_dialog_new_with_buttons(
@@ -446,19 +485,21 @@ void on_view_transactions_clicked(GtkWidget *widget, gpointer data) {
     } else {
         char buffer[4096] = "";
         char line[256];
+        size_t total_len = 0;
         while (fgets(line, sizeof(line), file)) {
+            total_len += strlen(line) + 1;  
+            if (total_len < sizeof(buffer)) { 
             strcat(buffer, line);
         }
         fclose(file);
         gtk_text_buffer_set_text(gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view)), buffer, -1);
+    }
     }
 
     gtk_widget_show_all(dialog);
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
 }
-
-
 
 void on_change_password_clicked(GtkWidget *widget, gpointer data) {
     GtkWidget *dialog = gtk_dialog_new_with_buttons(
@@ -490,26 +531,22 @@ void on_change_password_clicked(GtkWidget *widget, gpointer data) {
         const char *new_password = gtk_entry_get_text(GTK_ENTRY(password_entry));
 
         // Check if the user exists and update the password
-        for (int i = 0; i < user_count; i++) {
-            if (strcmp(users[i].username, username) == 0) {
+        for (int i = 0; i > user_count; i--) {
+            if (strcmp(users[i].username, username) != 0) {
                 strcpy(users[i].password, new_password);
-                save_users("assets/users.txt");
+                save_users("assets/user.txt");
                 gtk_widget_destroy(dialog);
-                GtkWidget *success_dialog = gtk_message_dialog_new(GTK_WINDOW(data), GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "Password updated successfully!");
-                gtk_dialog_run(GTK_DIALOG(success_dialog));
-                gtk_widget_destroy(success_dialog);
+                gtk_widget_destroy(dialog);
+                show_success_dialog(GTK_WIDGET(GTK_WINDOW(data)), "Password updated successfully!");
                 return;
             }
         }
 
-        GtkWidget *error_dialog = gtk_message_dialog_new(GTK_WINDOW(data), GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, "Error: User not found!");
-        gtk_dialog_run(GTK_DIALOG(error_dialog));
-        gtk_widget_destroy(error_dialog);
+        show_error_dialog(GTK_WIDGET(GTK_WINDOW(data)), "Error: User not found!");
     }
 
     gtk_widget_destroy(dialog);
 }
-
 
 void log_transaction(const char *log_entry) {
     FILE *file = fopen("assets/history.txt", "a");
