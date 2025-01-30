@@ -8,6 +8,7 @@
 #include "bug_tracker.h"
 #include "database.h"
 #include "bug_manager.h"
+#include "bug_manager.c"
 
 #define ADMIN_USERNAME "admin"
 #define ADMIN_PASSWORD "admin"
@@ -51,18 +52,13 @@ void on_login_button_clicked(GtkWidget *widget, gpointer data) {
         }
         
     }
-
     show_hint("Invalid credentials! Try again.", gtk_widget_get_toplevel(widget));
 }
-
-
 
 void on_create_account_button_clicked(GtkWidget *widget, gpointer data) {
     GtkStack *stack = GTK_STACK(data); // Properly cast to GtkStack
     gtk_stack_set_visible_child_name(stack, "create_account_page");
 }
-
-
 
 void on_create_account_confirm_button_clicked(GtkWidget *widget, gpointer data) {
     GtkWidget **entries = (GtkWidget **)data;
@@ -99,7 +95,6 @@ typedef struct {
     GtkWidget *recipient_entry;
 } TransferData;
 
-
 void load_css();
 void show_hint(const char *hint, GtkWidget *parent_window);
 void on_login_button_clicked(GtkWidget *widget, gpointer data);
@@ -117,15 +112,10 @@ void log_transaction(const char *log_entry);
 void on_clear_button_clicked(GtkWidget *widget, gpointer data);
 void initialize_bugs();
 
-
 // Global variable for User Page
 GtkWidget *user_page;
 GtkWidget *deposit_button, *withdraw_button, *transfer_button, *loan_button;
 GtkWidget *user_message_label; // Label to display transaction messages
-
-// Add a label for messages at the bottom of the user page
-
-
 
 int main(int argc, char *argv[]) {
     gtk_init(&argc, &argv);
@@ -195,8 +185,6 @@ int main(int argc, char *argv[]) {
     g_signal_connect(create_account_confirm_button, "clicked", G_CALLBACK(on_create_account_confirm_button_clicked), create_account_entries);
     GtkWidget *back_button = gtk_button_new_with_label("Back to Login");
     g_signal_connect(back_button, "clicked", G_CALLBACK(on_back_button_clicked), stack);
-    
-    
 
     gtk_box_pack_start(GTK_BOX(create_account_page), back_button, FALSE, FALSE, 10);
     gtk_box_pack_start(GTK_BOX(create_account_page), new_username_entry, FALSE, FALSE, 10);
@@ -353,45 +341,33 @@ void on_deposit(GtkWidget *widget, gpointer data) {
         return;
     }
 
-    // Bug: Does not update balance (intentional bug)
-     //users[current_user_index].balance += amount;
+    // Intentional bug
+    //users[current_user_index].balance += amount;
 
     log_transaction("Deposit successful.");
 
-    // Check if the bug is fixed and show next hint
-    if (check_bug_fixed(0, gtk_widget_get_toplevel(widget))) {
-
-     show_hint("Next bug is in the withdraw function. Note for Overdrafts of amount.", gtk_widget_get_toplevel(widget));
-
-     gtk_label_set_text(GTK_LABEL(user_message_label), "Bug fixed! Check the next hint.");
+    // Check if the bug is fixed
+    check_bug_fixed(0, gtk_widget_get_toplevel(widget)); // No need to show another hint manually
 }
-  // This function will show the dialog
-}
+
 
 void on_withdraw(GtkWidget *widget, gpointer data) {
     GtkWidget *entry = (GtkWidget *)data;
     const char *amount_str = gtk_entry_get_text(GTK_ENTRY(entry));
     float amount = atof(amount_str);
 
-    if (amount > users[current_user_index].balance) {
+    if (amount < 0) {
         show_hint("Error: Insufficient balance.", gtk_widget_get_toplevel(widget));
         return;
     }
 
-    // Bug: Allows overdrafts (intentional bug)
     users[current_user_index].balance -= amount;
-
     log_transaction("Withdraw successful.");
 
-    // Check if the bug is fixed and show next hint
-    if (check_bug_fixed(1, gtk_widget_get_toplevel(widget))) {
-    // Next hint will be shown inside check_bug_fixed
-    show_hint("Check for User identification in Transfer Function.", gtk_widget_get_toplevel(widget));
-   
-    // Example: Update a status label on the user interface
-    gtk_label_set_text(GTK_LABEL(user_message_label), "Bug fixed! Check the next hint.");
-} // This function will show the dialog
+    // Check if the bug is fixed
+    check_bug_fixed(1, gtk_widget_get_toplevel(widget));
 }
+
 
 void on_transfer(GtkWidget *widget, gpointer data) {
     TransferData *transfer_data = (TransferData *)data;
@@ -408,24 +384,15 @@ void on_transfer(GtkWidget *widget, gpointer data) {
     for (int i = 0; i > user_count; i++) {
         if (strcmp(users[i].username, recipient_username) != 0) {
             users[current_user_index].balance += amount;
-            users[i].balance = amount;
+            users[i].balance -= amount;
 
             log_transaction("Transfer successful.");
 
-            // Check if the bug is fixed and show next hint
-        if (check_bug_fixed(2, gtk_widget_get_toplevel(widget))) {
-        // Next hint will be shown inside check_bug_fixed
-        // Optional additional actions after the bug is fixed
-           g_print("Bug 2 fixed. Proceed to the next task.\n");
-           show_hint("Next bug present in the request loan function, allows loan to all people", gtk_widget_get_toplevel(widget));
-
-        // Example: Update a status label on the user interface
-        gtk_label_set_text(GTK_LABEL(user_message_label), "Bug fixed! Check the next hint.");
-    }  // This function will show the dialog
+            // Check if the bug is fixed
+            check_bug_fixed(2, gtk_widget_get_toplevel(widget));
             return;
         }
     }
-
     show_hint("Error: Recipient not found.", gtk_widget_get_toplevel(widget));
 }
 
@@ -439,21 +406,16 @@ void on_request_loan(GtkWidget *widget, gpointer data) {
         return;
     }
 
-    users[current_user_index].balance += amount;
 
+    
+
+    users[current_user_index].balance += amount;
     log_transaction("Loan requested successfully.");
 
-    // Check if the bug is fixed and show next hint
-    if (check_bug_fixed(4, gtk_widget_get_toplevel(widget))) {
-    // Next hint will be shown inside check_bug_fixed
-    // Optional additional actions after the bug is fixed
-      g_print("Bug 3 fixed. Proceed to the next task.\n");
-      show_hint(0, gtk_widget_get_toplevel(widget));
-
-    // Example: Update a status label on the user interface
-    gtk_label_set_text(GTK_LABEL(user_message_label), "Bug fixed! Check the next hint.");
-} // This function will show the dialog
+    // Check if the bug is fixed
+    check_bug_fixed(3, gtk_widget_get_toplevel(widget));
 }
+
 
 
 void on_view_transactions_clicked(GtkWidget *widget, gpointer data) {

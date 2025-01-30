@@ -4,7 +4,7 @@
 // Array of hints for each bug
 extern const char *hints[];
 
-void show_hint(const char *hint, GtkWidget *parent_window);
+void show_hint(const char *message, GtkWidget *parent_window);
 
 const char *get_next_hint(int current_bug);
 #endif

@@ -1,2 +1,2 @@
-user1,pass1,10089.00
-user2,pass2,1563.00
+user1,pass1,7584.00
+user2,pass2,5565.00

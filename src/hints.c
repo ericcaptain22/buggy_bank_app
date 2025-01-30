@@ -5,7 +5,7 @@
 
 int current_bug_index = 0;
 
-void show_hint(const char *hint, GtkWidget *parent_window) {
+void show_hint(const char *message, GtkWidget *parent_window) {
     // Create a new dialog box
     GtkWidget *dialog = gtk_dialog_new_with_buttons(
         "Bug Fix Hint",                  // Title
@@ -31,7 +31,7 @@ void show_hint(const char *hint, GtkWidget *parent_window) {
     
 
     // Set the hint text in the text view
-    gtk_text_buffer_set_text(gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view)), hint, -1);
+    gtk_text_buffer_set_text(gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view)), message, -1);
 
     // Add the text view to the scrolled window
     gtk_container_add(GTK_CONTAINER(scroll), text_view);
